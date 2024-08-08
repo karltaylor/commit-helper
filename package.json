@@ -1,0 +1,15 @@
+{
+  "name": "yarn-dev",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  },
+  "bin": {
+    "yarn-dev": "index.js"
+  },
+  "dependencies": {
+    "typescript": "^5.5.4"
+  }
+}
