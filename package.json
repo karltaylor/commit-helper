@@ -7,7 +7,7 @@
     "build": "tsc"
   },
   "bin": {
-    "yarn-dev": "index.js"
+    "yarndev": "index.js"
   },
   "dependencies": {
     "typescript": "^5.5.4"
