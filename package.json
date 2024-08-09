@@ -1,9 +1,10 @@
 {
-  "name": "yarn-dev",
+  "name": "commit-helper",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "dev": "yarn build && node lib/index.js",
     "build": "tsc"
   },
   "bin": {

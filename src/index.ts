@@ -1,27 +1,29 @@
 #!/usr/bin/env node
 
-import { exec, execSync } from "child_process";
+import { execSync } from "child_process";
+import { argv } from "process";
 
-console.log("yeet");
+try {
+  const message = argv[2];
+  if (!message) {
+    throw new Error("Please provide a commit message");
+  }
 
-console.log(process.cwd());
+  // Main shiz
+  try {
+    const branch = execSync("git rev-parse --abbrev-ref HEAD")
+      .toString()
+      .trim();
+    
+    const [action, ticketNumber] = branch.split("/");
 
-const cwd = process.cwd();
+    const string = `${action}(${ticketNumber}): ${message}`;
 
-const rootDir = cwd.split("/")[cwd.split("/").length - 1];
-
-console.log({ rootDir });
-
-const devScriptMap = {
-  v2: "dev",
-  "rollup-service": "up:dev",
-  "user-service": "up:user-stack:dev",
-};
-
-exec(`yarn ${devScriptMap[rootDir as keyof typeof devScriptMap]}`, (err, stdout, stderr) => {
-    if (err) {
-        console.error(err);
-        return;
-    }
-    console.log(stdout);
-})
+    execSync(`git commit -m "${string}"`);
+  } catch (error) {
+    // @ts-ignore
+    console.log(error.stdout.toString());
+  }
+} catch (error) {
+  console.log(error);
+}
