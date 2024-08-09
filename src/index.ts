@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { execSync } from "child_process";
+import { exec, execSync } from "child_process";
 import { argv } from "process";
 
 try {
@@ -19,7 +19,9 @@ try {
 
     const string = `${action}(${ticketNumber}): ${message}`;
 
-    execSync(`git commit -m "${string}"`);
+    exec(`git commit -m "${string}"`, (error, stdout, stderr) => {
+      console.log(stdout)
+    });
   } catch (error) {
     // @ts-ignore
     console.log(error.stdout.toString());
