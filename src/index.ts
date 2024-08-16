@@ -29,6 +29,8 @@ try {
     const string = `${action}(${ticketNumber}): ${message}`;
 
     exec(`git commit -m "${string}"`, (error, stdout, stderr) => {
+
+      if (error) console.log(error);
       if (stderr) console.log(stderr);
 
       console.log(stdout);
