@@ -4,16 +4,33 @@ import { exec, execSync } from "child_process";
 import { argv } from "process";
 
 try {
-  if (argv.length >= 4) {
-    throw new Error(
-      `Too many args:\n${argv
-        .slice(-2)
-        .map((el, idx) => `[${idx}]: ${el}`)
-        .join("\n")}`
-    );
-  }
+  const { flags, message } = argv.reduce<{
+    flags: string[];
+    message: null | string;
+  }>(
+    (prev, currValue, index) => {
+      const getMessage = () => {
+        if (prev.message) return prev.message;
 
-  const message = argv[2];
+        if (index === 2) {
+          return currValue;
+        }
+
+        return prev.message;
+      };
+
+      const message = getMessage();
+
+      return {
+        ...prev,
+        message,
+        flags: currValue.startsWith("-")
+          ? [...prev.flags, currValue]
+          : prev.flags,
+      };
+    },
+    { flags: [], message: null }
+  );
 
   if (!message) {
     throw new Error("Please provide a commit message");
@@ -28,8 +45,7 @@ try {
 
     const string = `${action}(${ticketNumber}): ${message}`;
 
-    exec(`git commit -m "${string}"`, (error, stdout, stderr) => {
-
+    exec(`git commit -m "${string}" ${flags.join(" ")}`, (error, stdout, stderr) => {
       if (error) console.log(error);
       if (stderr) console.log(stderr);
 
